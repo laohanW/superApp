@@ -2,9 +2,10 @@ import React from 'react';
 import {
 	View,
 	Text,
+	Button,
 	StyleSheet
 } from 'react-native';
-class Bus extends React.Component
+class Mine  extends React.Component
 {
 	constructor(props)
 	{
@@ -18,12 +19,16 @@ class Bus extends React.Component
 	{
 		
 	}
+	OnLogin=()=>{
+		this.props.navigation.navigate('Login');
+	}
 	render()
 	{
 		return(
 			<View>
-				<Text style={styles.subHeader}>Bus</Text>
-			</View>		
+				<Text>Mine</Text>
+				<Button onPress={this.OnLogin} title="go to login" />
+			</View>
 		);
 	}
 	componentDidMount()
@@ -35,9 +40,9 @@ class Bus extends React.Component
 		
 	}
 }
-const style=StyleSheet.create({
+const styles=StyleSheet.create({
 	subHeader:{
 		fontSize:20
 	}
 });
-export default Bus;
+export default Mine;
