@@ -1,4 +1,4 @@
-import fetch from 'iso'
+import fetch from 'isomorphic-fetch';
 import protocol from '../core/constant/protocol';
 function LoginAction(username,password)
 {
