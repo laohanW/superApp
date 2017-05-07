@@ -4,50 +4,9 @@ import {
 	View,
 	StyleSheet
 } from 'react-native';
-import Home from './container/Home';
-import Mine from './container/Mine';
-import Login from './container/Login';
-import {TabNavigator,StackNavigator} from 'react-navigation';
 import configureStore from './store/configureStore';
+import config from './config';
 
-const Stack=StackNavigator(
-	{
-		Main:{
-			screen:TabNavigator(
-			{
-				Home:
-				{
-					screen:Home,
-					navigationOptions:{
-						tabBarLabel:"Home"
-					}
-				},
-				Mine:
-				{
-					screen:Mine,
-					navigationOptions:{
-						tabBarLabel:"Mine"
-					}
-				}
-			},
-			{
-				tabBarPosition:"bottom"
-			}),
-			navigationOptions:{
-				header:null
-			}
-		},
-		Login:{
-			screen:Login,
-			navigationOptions:{
-				title:"Login"
-			}
-		}
-	},
-	{
-		initialRouteName:"Main",
-	}
-);
 class App extends React.Component
 {
 	constructor(props)
@@ -57,9 +16,10 @@ class App extends React.Component
 	}
 	render()
 	{
+		let Navigator=config.Navigator;
 		return(
 			<Provider store={this.store}> 
-				<Stack />
+				<Navigator />
 			</Provider>
 		);
 	}

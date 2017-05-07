@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import protocol from '../core/constant/protocol';
 function LoginAction(username,password)
 {
@@ -18,5 +17,7 @@ function LoginAction(username,password)
 		}).catch(err=>{
 			console.log(err);
 		});
+		dispatch({type:"TEST",test:""});
 	};
 }
+export default LoginAction;
