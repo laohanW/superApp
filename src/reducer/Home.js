@@ -6,9 +6,9 @@ function HomeReducer(state=initialState,action)
 {
 	switch(action)
 	{
-		case "TEST":
+		case "POST_HOME":
 			return Object.assign({},state,{
-				test:"TEST"
+				homeDataPosted:true
 			});
 		default:
 			return state;

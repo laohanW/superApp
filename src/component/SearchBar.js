@@ -9,7 +9,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, Image, Keyboard } from 'react-native';
 
-import { screen, system, tool } from '../common'
+import { screen, system, tool } from '../core'
 
 
 class SearchBar extends Component {
@@ -63,7 +63,7 @@ class SearchBar extends Component {
                 <View style={styles.inputContainer}>
                     <Image
                         style={styles.icon}
-                        source={require('../img/Home/search_icon.png')}
+                        source={this.props.searchIcon}
                     />
 
                     <TextInput

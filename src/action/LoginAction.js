@@ -1,8 +1,8 @@
-import protocol from '../core/constant/protocol';
+import {protocol} from '../core';
 function LoginAction(username,password)
 {
 	return dispatch=>{
-		fetch(protocol+"/api/login",{
+		fetch(protocol.url+"/api/login",{
 			method:"POST",
 			headers:{
 				'Content-Type':'application/json',

@@ -1,4 +1,3 @@
-
 import {TabNavigator,StackNavigator} from 'react-navigation';
 const config={
 	Navigator:StackNavigator(
@@ -11,6 +10,20 @@ const config={
 					screen:require('./container/Home').default,
 					navigationOptions:{
 						tabBarLabel:"Home"
+					}
+				},
+				Nearby:
+				{
+					screen:require('./container/Nearby').default,
+					navigationOptions:{
+						tabBarLabel:"Nearby"
+					}
+				},
+				Order:
+				{
+					screen:require('./container/Order').default,
+					navigationOptions:{
+						tabBarLabel:"Order"
 					}
 				},
 				Mine:
