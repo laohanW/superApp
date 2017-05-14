@@ -105,13 +105,15 @@ class RefreshListView extends Component {
     }
 
     render() {
+		let refreshing=this.state.headerState===RefreshState.Refreshing;
+		console.log(refreshing);
         return (
             <ListView
                 {...this.props}
                 enableEmptySections
                 refreshControl={
                     <RefreshControl
-                        refreshing={this.state.headerState == RefreshState.Refreshing}
+                        refreshing={refreshing}
                         onRefresh={() => this.onHeaderRefresh()}
                         tintColor='gray'
                     />

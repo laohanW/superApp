@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
-import Home from './Home';
+import HomeReducer from './HomeReducer';
 const reducers= combineReducers({
-	"Home":Home
+	"Home":HomeReducer
 });
 export default reducers;

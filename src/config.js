@@ -50,7 +50,12 @@ const config={
 	},
 	{
 		initialRouteName:"Main",
-	})
-
+	}),
+	database:{
+		name:"superApp.db",
+		version:"1.0",
+		displayname:"superApp",
+		size:-1
+	}
 };
 export default config;

@@ -1,15 +1,17 @@
 const initialState={
-	test:""
+	test:"",
+	homeDataPosted:false
 };
 
 function HomeReducer(state=initialState,action)
 {
-	switch(action)
+	switch(action.type)
 	{
 		case "POST_HOME":
-			return Object.assign({},state,{
+			let o=Object.assign({},state,{
 				homeDataPosted:true
 			});
+			return o;
 		default:
 			return state;
 	}

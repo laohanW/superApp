@@ -7,15 +7,15 @@ import {
 	StatusBar,
 	TouchableOpacity, 
 	Image,
-	ListView
+	ListView,
+	ScrollView
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {RefreshListView} from '../component';
+import {RefreshListView,SpacingView,PageControl,color} from '../component';
 import { Heading1, Heading2, Paragraph } from '../component/Text';
 import { screen } from '../core';
-import { color } from '../core';
-import {PostHomeDataAction} from '../action/HomeAction';
+import HomeAction from '../action/HomeAction';
 import HomeController from '../controller/HomeController';
 //}}}
 
@@ -42,7 +42,7 @@ class GroupPurchaseCell extends React.Component {
         );
     }
 }
-class HomeMenuItem extends Component {
+class HomeMenuItem extends React.Component {
     render() {
         return (
             <TouchableOpacity style={styles.container}
@@ -55,7 +55,80 @@ class HomeMenuItem extends Component {
         );
     }
 }
-class HomeGridItem extends Component {
+class HomeMenuView extends React.Component
+{
+	constructor(props)
+	{
+		super(props);
+		this.state={
+			currentPage:0
+		};
+		this.onScroll=this.onScroll.bind(this);
+	}
+	onScroll(e)
+	{
+		let x=e.nativeEvent.contentOffset.x;
+		let currentPage=x/screen.width;
+
+		if (this.state.currentPage!=currentPage)
+		{
+			this.state({
+				currentPage:currentPage
+			});
+		}
+	}
+	render()
+	{
+		let {menuInfos,onMenuSelected}=this.props;
+		let menuItems=menuInfos.map(
+			(info,i)=>{
+				<HomeMenuItem
+					key={info.title}
+					title={info.title}
+					onPress={()=>{
+						onMenuSelected && onMenuSelected(i)
+					}}
+					/>
+			}
+		);
+		let menuViews=[];
+		let pageCount=Math.ceil(menuItems.length/10);
+		for(let i=0;i<pageCount;i++)
+		{
+			let length=menuItems.length<(i*10)? menuItems.length-(i*10) : 10;
+			let items=menuItems.slice(i*10,i*10+length);
+			let menuView=(
+				<View key={i}>
+					{items}
+				</View>
+			);
+			menuViews.push(menuView);
+		}
+		return(
+			<View>
+				<ScrollView
+					onScroll={(e)=>this.onScroll(e)}
+					showsHorizontalScrollIndicator={false}
+					pagingEnabled={true}
+					horizontal={true}
+				>
+					<View>
+						{menuViews}
+					</View>
+				</ScrollView>
+				<PageControl
+					numberOfPages={pageCount}
+					currentPage={this.state.currentPage}
+					hidesForSinglePage={true}
+					pageIndicatorTintColor='gray'
+					currentPageIndicatorTintColor={color.theme}
+					indicatorSize={{width:8,height:8}}
+				/>
+			</View>
+		);
+	}
+}
+class HomeGridItem extends React.Component {
     render() {
         let info = this.props.info
 
@@ -77,7 +150,7 @@ class HomeGridItem extends Component {
     }
 }
 
-class HomeGridView extends Component {
+class HomeGridView extends React.Component {
 
     static defaultProps = {
         infos: []
@@ -113,6 +186,7 @@ class Home  extends React.Component
 		super(props);
 		let ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!==r2});
 		this.state={
+			menu:[],
 			discounts:[],
 			dataSource:ds.cloneWithRows([])
 		};
@@ -149,10 +223,10 @@ class Home  extends React.Component
 	componentWillReceiveProps(nextProps)
 	{
 		console.log(nextProps);
-		// this.state.menu=homeData.menu;
-		// this.state.discount=homeData.discount;
-		// this.state.recommend=homeData.recommend;
-		 this.refs.listView.endRefreshing(RefreshState.Failure)
+	    this.state.menu=HomeController.getMenuData();
+		this.state.discount=HomeController.getDiscountData();
+		this.state.recommend=HomeController.getRecommendData();
+		this.refs.listView.endRefreshing(RefreshState.Success)
 	}
 	componentWillMount()
 	{
@@ -182,7 +256,8 @@ class Home  extends React.Component
 	}
 	componentDidMount()
 	{
-		this.props.postHomeData();
+		console.log(this.props);
+		this.props.PostHomeData();
 		this.refs.listView.startHeaderRefreshing();
 	}
 	componentWillUnmount()
@@ -199,10 +274,15 @@ const styles=StyleSheet.create({
 //}}}
 
 export default connect(
-	state=>{
-		
-	},
-	dispatch=>{
-		postHomeData:bindActionCreators(PostHomeDataAction,dispatch)
-	}
+	state=>(
+		{
+			test:state.test,
+			homeDataPosted:state.homeDataPosted
+		}
+	),
+	dispatch=>(
+		{
+			...bindActionCreators(HomeAction,dispatch)
+		}
+	)
 )(Home);
