@@ -106,7 +106,6 @@ class RefreshListView extends Component {
 
     render() {
 		let refreshing=this.state.headerState===RefreshState.Refreshing;
-		console.log(refreshing);
         return (
             <ListView
                 {...this.props}

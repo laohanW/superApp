@@ -101,7 +101,7 @@ class Mine  extends React.Component
 				<ScrollView
 					refreshControl={
 						<RefreshControl
-							refreshing={this.state.isRefresh}
+							refreshing={this.state.isRefreshing}
 							onRefresh={()=>this.onHeaderRefresh()}
 							tintColor='gray'
 						/>

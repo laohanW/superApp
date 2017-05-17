@@ -1,18 +1,18 @@
 //{{{ import
 import React from 'react';
 import {
-	View,
-	Text,
-	StyleSheet,
-	StatusBar,
-	TouchableOpacity, 
-	Image,
-	ListView,
-	ScrollView
-} from 'react-native';
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+  ListView,
+  ScrollView,
+} from 'react-native'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {RefreshListView,SpacingView,PageControl,color} from '../component';
+import {RefreshListView,SpacingView,PageControl,color,RefreshState} from '../component';
 import { Heading1, Heading2, Paragraph } from '../component/Text';
 import { screen } from '../core';
 import HomeAction from '../action/HomeAction';
@@ -176,7 +176,6 @@ class HomeGridView extends React.Component {
 }
 //}}}
 
-
 //{{{ Render
 class Home  extends React.Component
 {
@@ -222,11 +221,42 @@ class Home  extends React.Component
 	//{{{ native component
 	componentWillReceiveProps(nextProps)
 	{
-		console.log(nextProps);
-	    this.state.menu=HomeController.getMenuData();
-		this.state.discount=HomeController.getDiscountData();
-		this.state.recommend=HomeController.getRecommendData();
-		this.refs.listView.endRefreshing(RefreshState.Success)
+		if (nextProps.homeDataPosted)
+		{
+			HomeController.getDiscountData(result=>{
+				let dis=[];
+				for(let i=0;i<result.rows.length;i++)
+				{
+					dis.push(result.rows.item(i));		
+				}
+				this.state.discounts=dis;
+			},error=>{
+				console.log(error);	
+			});
+			HomeController.getRecommendData(result=>{
+				let rem=[];
+				for(let i=0;i<result.rows.length;i++)
+				{
+					rem.push(result.rows.item(i));
+				}
+				let ds=new ListView.DataSource({rowHasChanged:(r1,r2)=>r1!=r2});
+				this.state.dataSource=ds.cloneWithRows(rem);
+			},error=>{
+				console.log(error);	
+			});
+			HomeController.getMenuData(result=>{
+				let menu=[];
+				for(let i=0;i<result.rows.length;i++)
+				{
+					menu.push(result.rows.item(i));
+				}
+				this.state.menu=menu;
+			},
+			error=>{
+				console.log(error);
+			});
+		}
+		this.refs.listView.endRefreshing(RefreshState.Idle);
 	}
 	componentWillMount()
 	{
@@ -234,6 +264,7 @@ class Home  extends React.Component
 	}
 	render()
 	{
+		console.log(this.state);
 		return(
 			<View>
 				<RefreshListView
@@ -256,8 +287,9 @@ class Home  extends React.Component
 	}
 	componentDidMount()
 	{
-		console.log(this.props);
-		this.props.PostHomeData();
+		setTimeout(()=>{
+			this.props.PostHomeData();
+		},1000);
 		this.refs.listView.startHeaderRefreshing();
 	}
 	componentWillUnmount()
@@ -270,16 +302,20 @@ class Home  extends React.Component
 
 //{{{ styles
 const styles=StyleSheet.create({
+
 });
 //}}}
 
+function mapStateToProps(state)
+{
+	return {
+		test:state.Home.test,
+		homeDataPosted:state.Home.homeDataPosted
+	}
+}
+
 export default connect(
-	state=>(
-		{
-			test:state.test,
-			homeDataPosted:state.homeDataPosted
-		}
-	),
+	mapStateToProps,
 	dispatch=>(
 		{
 			...bindActionCreators(HomeAction,dispatch)

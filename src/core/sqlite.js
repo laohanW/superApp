@@ -40,9 +40,9 @@ class Model
 			);
 		});
 	}
-	find(name,result,error)
+	find(result,error)
 	{
-		this._db.executeSql('SELECT * FROM '+this.name+' WHERE name=?',[name],result,error);
+		this._db.executeSql('SELECT * FROM '+this.name,[],result,error);
 	}
 	delete(name,success,error)
 	{
